@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Registration</title>
+</head>
+
+<body>
+    <h1>User Registration</h1>
+    <form action="/api/users/register" method="POST" enctype="multipart/form-data">
+        <label for="">User Name : &nbsp; </label>
+        <input type="text" name="uname" id="uname"><br><br>
+        <label for="">Age : &nbsp; </label>
+        <input type="text" name="age" id="age"><br><br>
+        <label for="">Email : &nbsp; </label>
+        <input type="text" name="email" id="email"><br><br>
+        <label for="">Password : &nbsp; </label>
+        <input type="text" name="password" id="password"><br><br>
+        <label for="">Photo : &nbsp; </label> 
+        <input type="file" name="photo" id="photo"><br><br>
+        <label for="">Documents : &nbsp; </label>
+        <input type="file" name="document" id="document" multiple><br><br>
+        <button type="submit">Register</button><br><br>
+        <a href="/api/users/files">See Files</a>
+    </form>
+</body>
+
+</html>

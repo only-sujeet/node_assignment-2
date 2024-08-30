@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uploaded Files</title>
+</head>
+
+<body>
+    <h1>Uploaded Files</h1>
+    <ul>
+        <% if(users.length> 0) { %>
+            <% users.forEach(user=> { %>
+                <li>
+                    <strong>
+                        <%= user.uname %>:
+                    </strong>
+                    <ul>
+                        <% if (user.document && user.document.length> 0) { %>
+                            <% user.document.forEach(file=> { %>
+                                <li><a href="/api/users/download/<%= file.split('/').pop() %>">
+                                        <%= file.split('/').pop() %>
+                                    </a></li>
+                                <% }) %>
+                                    <% } else { %>
+                                        <li>No files uploaded</li>
+                                        <% } %>
+                    </ul>
+                </li>
+                <% }) %>
+                    <% } else {%>
+                        <h2>No User Registered</h2>
+                        <% }%>
+    </ul>
+    <br>
+    <a href="/api/users">Go Back</a>
+</body>
+
+</html>
