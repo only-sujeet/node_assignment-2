@@ -1,10 +1,10 @@
 const express = require("express")
 const multer = require('multer');
 const User = require("../Model/userModel");
-
 const path = require('path');
 const router = express.Router()
-
+const { jwtGenerate } = require("../middleWare/jwtMiddle");
+const axios = require('axios');
 // File upload setup using Multer
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -16,7 +16,6 @@ const storage = multer.diskStorage({
 });
 
 const fileFilter = (req, file, cb) => {
-    // Accept only certain file types
     if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png' || file.mimetype === 'image/jpg') {
         cb(null, true);
     } else {
@@ -27,7 +26,7 @@ const fileFilter = (req, file, cb) => {
 const upload = multer({
     storage: storage,
     limits: {
-        fileSize: 1024 * 1024 * 5  // 5MB max file size
+        fileSize: 1024 * 1024 * 5
     },
     fileFilter: fileFilter
 });
@@ -39,7 +38,7 @@ router.get('/', async (req, res) => {
 
 router.post('/register', upload.fields([{ name: 'photo', maxCount: 1 }, { name: "document", maxCount: 10 }]), async (req, res) => {
     try {
-        const { uname, age, rollNo } = req.body;
+        const { uname, age, email, password } = req.body;
         const photo = req.files['photo'] ? req.files['photo'][0].path : '';
         const document = req.files['document'] ? req.files['document'].map(file => file.path) : [];
 
@@ -85,16 +84,45 @@ router.get('/loginJwt', (req, res) => {
     res.render('loginJwt')
 })
 
-router.post('/loginJwt', async (req, res) => {
-    const { email, password } = req.body
+router.post('/loginJwt', jwtGenerate, async (req, res) => {
+    const { email, password } = req.body;
+    try {
+        console.log(email)
+        let checkUser = await User.findOne({ email });
+        console.log(checkUser);
+        if (!checkUser) {
+            return res.render('notFound');
+        }
 
-    const checkEmail = await User.findOne({ email: email })
-    if (checkEmail) {
-        res.render('dashboard', { title: "Welcome From JWT" })
+        const checkPassword = await checkUser.matchPassword(password);
+        if (checkPassword) {
+            try {
+                req.session.jwtToken =  req.token
+                // Fetch data from the API
+               
+                // Send the API data as JSON response
+                return res.redirect("/api/student/");
+            } catch (apiError) {
+                console.error('Error fetching student data:', apiError);
+                return res.status(500).send('Error fetching student data');
+            }
+        } else {
+            return res.render('notFound');
+        }
+    } catch (error) {
+        console.error('Login error:', error);
+        return res.status(500).send('Internal Server Error');
     }
-    else {
-        res.render('notFound')
-    }
-})
+});
+
+router.get('/logout', (req, res) => {
+    req.session.jwtToken = null;
+
+    req.session = null;
+
+    res.redirect('/login');
+});
+
+
 
 module.exports = router
