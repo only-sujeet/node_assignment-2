@@ -5,24 +5,54 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Students List</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 </head>
 
 <body>
-    <h2>Student List</h2>
-    <% if (getStudent.length > 0) { %>
-        <ul>
-            <% getStudent.forEach(student => { %>
-                <li>
-                    <%= student.sName %> &nbsp;&nbsp;
-                    <%= student.rollNo %> &nbsp;&nbsp;
-                    <%= student.age %>
-                </li>
-            <% }); %>
-        </ul>
-    <% } else { %>
-        <h3>No Student is Added</h3>
-    <% } %>
+    <div class="alert alert-success" role="alert">
+        <h3 align="center">Student List</h3>
+    </div>
+    <button class="btn btn-primary"> <a href="/api/student/addStudent" style="text-decoration: none;color: white;">Add
+            Student</a></button><br><br>
+    <% if (getStudent.length> 0) { %>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Roll No.</th>
+                    <th scope="col">Age</th>
+                    <th scope="col">Edit</th>
+                    <th scope="col">DELETE</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% getStudent.forEach(student=> { %>
+                    <tr>
+                        <td>
+                            <%= student.sName %>
+                        </td>
+                        <td>
+                            <%= student.rollNo %>
+                        </td>
+                        <td>
+                            <%= student.age %>
+                        </td>
+                        <td><button class="btn btn-primary"><a href="/api/student/editStudent/<%= student._id %>"
+                                    style="text-decoration: none;color: white;">Edit</a></button> </td>
+                        <td>
+                            <form action="/api/student/deleteStudent/<%= student._id %>?_method=DELETE" method="post"
+                                style="display: inline;">
+                                <button class="btn btn-danger" type="submit">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    <% }); %>
+            </tbody>
+        </table>
+        <% } else { %>
+            <h3>No Student is Added</h3>
+            <% } %>
 </body>
 
 </html>
-    

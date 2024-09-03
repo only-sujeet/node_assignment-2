@@ -5,6 +5,7 @@ const { DBconnection } = require('./Connection')
 const cookieSession = require("cookie-session")
 const app = express()
 const port = 3030
+const methodOverride = require('method-override');
 
 // app.use(session({
 //     secret: "sujeet",
@@ -22,6 +23,7 @@ app.use(cookieSession({
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use('/uploads', express.static('uploads'))
+app.use(methodOverride('_method')); // For handling PUT and DELETE requests
 
 app.set('view engine', 'ejs')
 app.set('views', path.join(__dirname, 'views'))

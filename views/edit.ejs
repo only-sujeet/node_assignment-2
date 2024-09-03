@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit <%= checkStudent.sName %></title>
+</head>
+<body>
+    <div align="center">
+        <h1>Edit Student </h1>
+        <form action="/api/student/<%= checkStudent._id %>?_method=PUT" method="post">
+            <label for="">Student Name :- </label>
+            <input type="text" name="sName" id="sName" value="<%= checkStudent.sName %>" required><br><br>
+            <label for="">Student Roll No. :- </label>
+            <input type="text" name="rollNo" id="rollNo" value="<%= checkStudent.rollNo %>" required><br><br>
+            <label for="">Student Age :- </label>
+            <input type="text" name="age" id="age" value="<%= checkStudent.age %>" required><br><br>
+            <button type="submit">Add Student</button>
+        </form>
+    </div>
+</body>
+</html>

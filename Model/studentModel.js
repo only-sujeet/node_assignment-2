@@ -9,7 +9,7 @@ const studentSchema = mongoose.Schema({
         type:String,
         required:[true,"Enter Roll No. "]
     },
-    q:{
+    age:{
         type:String,
         required:[true,"Enter Age "]
     },
