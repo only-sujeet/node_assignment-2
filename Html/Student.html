@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Students List</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+
+<body>
+    <div class="alert alert-success" role="alert">
+        <h3 align="center">Student List</h3>
+    </div>
+
+    <button class="btn btn-primary">
+        <a href="addStudent.html" style="text-decoration: none; color: white;">Add Student</a>
+    </button><br><br>
+
+    <button class="btn btn-primary">
+        <a href="/api/users/logout" style="text-decoration: none; color: white;">Log Out</a>
+    </button><br><br>
+
+    <!-- Table to display students -->
+    <div id="studentListContainer">
+        <h3>Loading students...</h3>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            // Fetch the list of students when the page loads
+            $.ajax({
+                url: '/api/student/htmlget', // The route to get the students
+                method: 'GET',
+                success: function (response) {
+                    if (response.length > 0) {
+                        let table = `<table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Name</th>
+                                                <th scope="col">Roll No.</th>
+                                                <th scope="col">Age</th>
+                                                <th scope="col">Edit</th>
+                                                <th scope="col">DELETE</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>`;
+
+                        response.forEach(student => {
+                            table += `<tr id="student-${student._id}">
+                                        <td>${student.sName}</td>
+                                        <td>${student.rollNo}</td>
+                                        <td>${student.age}</td>
+                                        <td>
+                                            <button class="btn btn-primary">
+                                                <a href="editStudent.html?id=${student._id}" style="text-decoration: none; color: white;">Edit</a>
+                                           
+                                            </button>
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-danger" onclick="deleteStudent('${student._id}')">Delete</button>
+                                        </td>
+                                      </tr>`;
+                        });
+
+                        table += `</tbody></table>`;
+                        $('#studentListContainer').html(table);
+                    } else {
+                        $('#studentListContainer').html('<h3>No Student is Added</h3>');
+                    }
+                },
+                error: function () {
+                    $('#studentListContainer').html('<h3>Error fetching student data.</h3>');
+                }
+            });
+        });
+
+        // Function to delete a student
+        function deleteStudent(studentId) {
+            if (confirm('Are you sure you want to delete this student?')) {
+                $.ajax({
+                    url: '/api/student/deleteStudent/' + studentId,
+                    method: 'DELETE',
+                    success: function (response) {
+                        alert(response.message);
+                        $('#student-' + studentId).remove(); // Remove the student row from the table
+                        window.location.href = "student.html"
+                    },
+                    error: function (xhr) {
+                        alert('Error deleting student: ' + xhr.responseJSON.error);
+                    }
+                });
+            }
+        }
+    </script>
+</body>
+
+</html>

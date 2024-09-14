@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Student</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+
+<body>
+    <div align="center">
+        <div class="alert alert-success" role="alert">
+            <h3>Edit Student</h3>
+        </div>
+    </div>
+
+    <form id="editStudentForm">
+        <div class="form-group">
+            <label for="sName">Student Name:</label>
+            <input type="text" name="sName" id="sName" class="form-control form-control-md" placeholder="Enter Your Name" required>
+        </div>
+        <div class="form-group">
+            <label for="rollNo">Student Roll No.:</label>
+            <input type="text" name="rollNo" id="rollNo" class="form-control form-control-md" placeholder="Enter Your Roll No" required>
+        </div>
+        <div class="form-group">
+            <label for="age">Student Age:</label>
+            <input type="text" name="age" id="age" class="form-control form-control-md" placeholder="Enter Your Age" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Edit Student</button>
+    </form>
+
+    <script>
+        $(document).ready(function() {
+            const studentId = new URLSearchParams(window.location.search).get('id'); // Get the student ID from URL
+
+            // Fetch the student details when the page loads
+            $.ajax({
+                url: '/api/student/editStudent/' + studentId,
+                method: 'GET',
+                success: function(response) {
+                    $('#sName').val(response.sName);
+                    $('#rollNo').val(response.rollNo);
+                    $('#age').val(response.age);
+                },
+                error: function() {
+                    alert('Error fetching student details');
+                }
+            });
+
+            // Handle form submission to edit student details
+            $('#editStudentForm').on('submit', function(event) {
+                event.preventDefault(); // Prevent the default form submission
+
+                const sName = $('#sName').val();
+                const rollNo = $('#rollNo').val();
+                const age = $('#age').val();
+
+                $.ajax({
+                    url: '/api/student/editStudent/' + studentId,
+                    method: 'PUT',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ sName, rollNo, age }),
+                    success: function(response) {
+                        alert(response.message);
+                        window.location.href = '/students.html'; // Redirect to the students list page after success
+                    },
+                    error: function(xhr) {
+                        alert('Error updating student: ' + xhr.responseJSON.error);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

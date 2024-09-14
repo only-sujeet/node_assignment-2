@@ -80,9 +80,9 @@ router.get('/loginfile', (req, res) => {
     res.render('loginfile')
 })
 
-router.get('/loginJwt', (req, res) => {
-    res.render('loginJwt')
-})
+    router.get('/loginJwt', (req, res) => {
+        res.render('loginJwt')
+    })
 
 router.post('/loginJwt', jwtGenerate, async (req, res) => {
     const { email, password } = req.body;
@@ -97,10 +97,7 @@ router.post('/loginJwt', jwtGenerate, async (req, res) => {
         const checkPassword = await checkUser.matchPassword(password);
         if (checkPassword) {
             try {
-                req.session.jwtToken =  req.token
-                // Fetch data from the API
-               
-                // Send the API data as JSON response
+                req.session.jwtToken = req.token
                 return res.redirect("/api/student/");
             } catch (apiError) {
                 console.error('Error fetching student data:', apiError);
@@ -115,12 +112,73 @@ router.post('/loginJwt', jwtGenerate, async (req, res) => {
     }
 });
 
+
+router.post('/loginJwthtml', jwtGenerate, async (req, res) => {
+    const { email, password } = req.body;
+    try {
+        console.log(email);
+        let checkUser = await User.findOne({ email });
+        console.log(checkUser);
+
+        if (!checkUser) {
+            // User not found, send an error response
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        const checkPassword = await checkUser.matchPassword(password);
+        if (checkPassword) {
+            try {
+                // Save JWT token in session
+                req.session.jwtToken = req.token;
+                // Send success response
+                return res.status(200).json({ message: 'Login successful', redirectUrl: '/student.html' });
+            } catch (apiError) {
+                console.error('Error fetching student data:', apiError);
+                return res.status(500).json({ message: 'Error fetching student data' });
+            }
+        } else {
+            // Password is incorrect, send an error response
+            return res.status(401).json({ message: 'Invalid credentials' });
+        }
+    } catch (error) {
+        console.error('Login error:', error);
+        return res.status(500).json({ message: 'Internal Server Error' });
+    }
+});
+
+
 router.get('/logout', (req, res) => {
-    req.session.jwtToken = null;
+    req.session.destroy((err) => {
+        if (err) {
+            return res.status(500).send('Logout failed');
+        }
+        res.redirect('/api/users/');
+    });
+});
 
-    req.session = null;
+router.get('/redis', (req, res) => {
+    res.render('loginredis')
+})
 
-    res.redirect('/login');
+router.post('/loginRedis', async (req, res) => {
+    const { email, password } = req.body;
+    try {
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.render('loginredis', { error: 'Invalid username or password' });
+        }
+
+        const isMatch = await user.matchPassword(password);
+        if (isMatch) {
+            req.session.userId = user._id;
+            res.redirect('/api/users/files');
+        } else {
+            res.render('loginredis', { error: 'Invalid username or password' });
+        }
+    } catch (err) {
+        console.error('Login error:', err);
+        res.status(500).send('Internal Server Error');
+    }
 });
 
 

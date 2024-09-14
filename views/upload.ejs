@@ -4,27 +4,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Registration</title>
+    <title>User Registration</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 </head>
 
 <body>
-    <h1>User Registration</h1>
-    <form action="/api/users/register" method="POST" enctype="multipart/form-data">
-        <label for="">User Name : &nbsp; </label>
-        <input type="text" name="uname" id="uname"><br><br>
-        <label for="">Age : &nbsp; </label>
-        <input type="text" name="age" id="age"><br><br>
-        <label for="">Email : &nbsp; </label>
-        <input type="text" name="email" id="email"><br><br>
-        <label for="">Password : &nbsp; </label>
-        <input type="text" name="password" id="password"><br><br>
-        <label for="">Photo : &nbsp; </label> 
-        <input type="file" name="photo" id="photo"><br><br>
-        <label for="">Documents : &nbsp; </label>
-        <input type="file" name="document" id="document" multiple><br><br>
-        <button type="submit">Register</button><br><br>
-        <a href="/api/users/files">See Files</a>
-    </form>
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">User Registration</h1>
+        <form action="/api/users/register" method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="uname">User Name</label>
+                <input type="text" class="form-control" name="uname" id="uname" placeholder="Enter your name" required>
+            </div>
+            <div class="form-group">
+                <label for="age">Age</label>
+                <input type="text" class="form-control" name="age" id="age" placeholder="Enter your age" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" class="form-control" name="email" id="email" placeholder="Enter your email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" name="password" id="password" placeholder="Enter your password" required>
+            </div>
+            <div class="form-group">
+                <label for="photo">Photo</label>
+                <input type="file" class="form-control-file" name="photo" id="photo" required>
+            </div>
+            <div class="form-group">
+                <label for="document">Documents</label>
+                <input type="file" class="form-control-file" name="document" id="document" multiple required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Register</button>
+        </form>
+
+        <div class="text-center mt-4">
+            <a href="/api/users/files" class="btn btn-link">See Files</a>
+            <a href="/api/users/loginJwt" class="btn btn-link">Login with JWT</a>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9cY9XM2JlVMn8B5Duo8snUOhmXmnf6Th5PGEU" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 </body>
 
 </html>

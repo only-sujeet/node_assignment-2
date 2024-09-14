@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Student</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+
+<body>
+    <div align="center">
+        <div class="alert alert-success" role="alert">
+            <h3 align="center">Add Student</h3>
+        </div>
+    </div>
+    <form id="addStudentForm" class="form">
+        <div class="form-group">
+            <label for="sName">Student Name:</label>
+            <input type="text" name="sName" id="sName" class="form-control form-control-md"
+                placeholder="Enter Your Name" required>
+        </div>
+        <div class="form-group">
+            <label for="rollNo">Student Roll No.:</label>
+            <input type="text" name="rollNo" id="rollNo" class="form-control form-control-md"
+                placeholder="Enter Your Roll No" required>
+        </div>
+        <div class="form-group">
+            <label for="age">Student Age:</label>
+            <input type="text" name="age" id="age" class="form-control form-control-md" placeholder="Enter Your Age"
+                required>
+        </div>
+        <button type="submit" class="btn btn-primary">Add Student</button>
+    </form>
+
+    <!-- Success/Error message display -->
+    <div id="message" style="margin-top: 20px;"></div>
+
+    <script>
+        $(document).ready(function () {
+            // Handle form submission
+            $('#addStudentForm').on('submit', function (event) {
+                event.preventDefault(); // Prevent form from submitting traditionally
+
+                // Get form data
+                const studentData = {
+                    sName: $('#sName').val(),
+                    rollNo: $('#rollNo').val(),
+                    age: $('#age').val()
+                };
+
+                // AJAX request to submit form data
+                $.ajax({
+                    url: '/api/student/addStudentHtml',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(studentData),
+                    success: function (response) {
+                        $('#message').html('<div class="alert alert-success">Student added successfully!</div>');
+                        $('#addStudentForm')[0].reset(); // Clear form fields
+                        window.location.href = 'student.html';
+                    },
+                    error: function (xhr, status, error) {
+                        $('#message').html('<div class="alert alert-danger">Error adding student: ' + xhr.responseJSON.error + '</div>');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>
